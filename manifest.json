@@ -10,6 +10,12 @@
   "description": "Raadi shaqooyin internetka adigoo ka ilaalinaya khiyaanooyinka",
   "icons": [
     {
+  "src": "48.png",
+  "sizes": "48x48",
+  "type": "image/jpeg"
+}
+
+    {
       "src": "72.png",
       "sizes": "72x72",
       "type": "image/png"
