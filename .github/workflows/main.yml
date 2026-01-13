@@ -16,29 +16,27 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20 # Waxaan u isticmaalnay nooca ugu cusub
+          node-version: 20
 
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21' # Waxaan ka dhignay 21 si ay u waafaqdo Capacitor
 
       - name: Prepare Project
         run: |
-          # 1. Abuur package.json haddii uusan jirin
           if [ ! -f package.json ]; then
             npm init -y
           fi
           
-          # 2. Ku shub Capacitor si sax ah
           npm install @capacitor/core @capacitor/cli @capacitor/android
 
-          # 3. Samee folder-ka 'www' oo nuqul ka qaad faylashaada
           mkdir -p www
-          cp -r *.html *.js *.json *.png www/ 2>/dev/null || :
-
-          # 4. Initialize & Sync Capacitor (Tallaabada ugu muhiimsan)
+          # Nuqul ka qaad dhamaan faylashaada
+          cp -r index.html app.js language.js manifest.json service-worker.js offline.html www/ 2>/dev/null || :
+          
+          # Dhis Android files-ka
           npx cap init "ShaqoHub" "com.shaqohub.app" --web-dir www
           npx cap add android
           npx cap sync android
