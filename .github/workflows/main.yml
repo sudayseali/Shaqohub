@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '21' # Waxaan ka dhignay 21 si ay u waafaqdo Capacitor
+          java-version: '21'
 
       - name: Prepare Project
         run: |
@@ -30,22 +30,29 @@ jobs:
             npm init -y
           fi
           
-          npm install @capacitor/core @capacitor/cli @capacitor/android
+          # 1. Ku shub noocyada ugu cusub ee Capacitor
+          npm install @capacitor/core@latest @capacitor/cli@latest @capacitor/android@latest
 
+          # 2. Diyaari folder-ka web-ka
           mkdir -p www
-          # Nuqul ka qaad dhamaan faylashaada
           cp -r index.html app.js language.js manifest.json service-worker.js offline.html www/ 2>/dev/null || :
           
-          # Dhis Android files-ka
+          # 3. Initialize & Add Android
           npx cap init "ShaqoHub" "com.shaqohub.app" --web-dir www
           npx cap add android
+          
+          # 4. XALKA CILADDA: Cusboonaysii Gradle Wrapper
+          cd android
+          ./gradlew wrapper --gradle-version 8.2 --distribution-type all
+          cd ..
+          
           npx cap sync android
 
       - name: Build APK (Debug)
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon # Waxaan ku darnay --no-daemon si uu server-ku u xasillo
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
